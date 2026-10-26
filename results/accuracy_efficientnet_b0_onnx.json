@@ -1,0 +1,19 @@
+{
+  "model_id": "efficientnet_b0",
+  "architecture": "EfficientNet-B0",
+  "weights": "EfficientNet_B0_Weights.DEFAULT",
+  "runtime": "onnx",
+  "device": "cpu",
+  "batch_size": 1,
+  "manifest_path": "dataset/val_manifest.csv",
+  "total_samples": 50000,
+  "evaluated_samples": 50000,
+  "skipped_images": 0,
+  "execution_errors": 0,
+  "top1_accuracy": 0.777,
+  "top5_accuracy": 0.9352,
+  "evaluation_time_seconds": 532.22,
+  "evaluation_time_minutes": 8.87,
+  "throughput_samples_per_sec": 93.95,
+  "timestamp": "2026-10-18 13:16:31"
+}

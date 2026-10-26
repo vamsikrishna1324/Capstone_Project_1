@@ -1,0 +1,30 @@
+# Pinned exact verified dependencies for Step 1, Step 2, Step 3A & Step 3B reproducibility
+torch==2.14.0
+torchvision==0.29.0
+numpy==2.4.6
+pillow==12.3.0
+pytest==9.1.1
+onnx==1.23.0
+onnxruntime==1.30.0
+tensorflow==2.21.0
+onnx2tf==1.28.8
+tf-keras==2.21.0
+onnx-graphsurgeon==0.6.1
+sng4onnx==2.0.1
+sne4onnx==2.0.1
+psutil==7.2.2
+ai-edge-litert==2.2.0
+scipy==1.17.1
+
+# Step 5: Database Persistence Layer (MySQL & SQLAlchemy ORM)
+SQLAlchemy==2.0.38
+pymysql==1.1.1
+cryptography==44.0.1
+python-dotenv==1.0.1
+
+# Step 6: FastAPI Backend Services
+fastapi==0.144.0
+uvicorn==0.54.0
+pydantic==2.14.1
+httpx==0.28.1
+

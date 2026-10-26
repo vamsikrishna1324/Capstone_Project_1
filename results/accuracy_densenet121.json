@@ -1,0 +1,19 @@
+{
+  "model_id": "densenet121",
+  "architecture": "DenseNet121",
+  "weights": "DenseNet121_Weights.DEFAULT",
+  "runtime": "pytorch",
+  "device": "cpu",
+  "batch_size": 16,
+  "manifest_path": "dataset/val_manifest.csv",
+  "total_samples": 50000,
+  "evaluated_samples": 50000,
+  "skipped_images": 0,
+  "execution_errors": 0,
+  "top1_accuracy": 0.7444,
+  "top5_accuracy": 0.9197,
+  "evaluation_time_seconds": 5418.57,
+  "evaluation_time_minutes": 90.31,
+  "throughput_samples_per_sec": 9.23,
+  "timestamp": "2026-10-18 11:19:23"
+}

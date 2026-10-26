@@ -1,0 +1,19 @@
+{
+  "model_id": "mobilenet_v3_small",
+  "architecture": "MobileNetV3-Small",
+  "weights": "MobileNet_V3_Small_Weights.DEFAULT",
+  "runtime": "pytorch",
+  "device": "cpu",
+  "batch_size": 16,
+  "manifest_path": "dataset/val_manifest.csv",
+  "total_samples": 50000,
+  "evaluated_samples": 50000,
+  "skipped_images": 0,
+  "execution_errors": 0,
+  "top1_accuracy": 0.6767,
+  "top5_accuracy": 0.8741,
+  "evaluation_time_seconds": 2626.99,
+  "evaluation_time_minutes": 43.78,
+  "throughput_samples_per_sec": 19.03,
+  "timestamp": "2026-10-01 10:18:34"
+}

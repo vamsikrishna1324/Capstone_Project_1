@@ -1,0 +1,2 @@
+# Configuration for Antigravity IDE Python language server (Pyrefly)
+python-interpreter-path = ".venv311/bin/python"

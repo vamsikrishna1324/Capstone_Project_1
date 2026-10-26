@@ -1,0 +1,19 @@
+{
+  "model_id": "resnet50",
+  "architecture": "ResNet50",
+  "weights": "ResNet50_Weights.DEFAULT",
+  "runtime": "tflite",
+  "device": "cpu",
+  "batch_size": 1,
+  "manifest_path": "dataset/val_manifest.csv",
+  "total_samples": 50000,
+  "evaluated_samples": 50000,
+  "skipped_images": 0,
+  "execution_errors": 0,
+  "top1_accuracy": 0.8086,
+  "top5_accuracy": 0.9544,
+  "evaluation_time_seconds": 5179.79,
+  "evaluation_time_minutes": 86.33,
+  "throughput_samples_per_sec": 9.65,
+  "timestamp": "2026-10-18 15:21:29"
+}

@@ -1,0 +1,289 @@
+================================================================================
+AUTOMATED IMAGE MODEL BENCHMARKING FOR EDGE DEPLOYMENT
+SERVICE RUNNING & MANAGEMENT GUIDE
+================================================================================
+
+This beginner-friendly guide walks you through starting, verifying, connecting
+to, and stopping all components of the benchmarking system.
+
+--------------------------------------------------------------------------------
+1. PROJECT OVERVIEW
+--------------------------------------------------------------------------------
+The project consists of three integrated layers:
+
+  1. Database Layer:
+     - MySQL 8.0 database running inside a dedicated Docker container named
+       `edge-mysql`.
+     - Persists all benchmark runs, multi-model comparison sessions, and model
+       measurements (accuracy, latency, memory footprint, artifact size).
+     - Database name: edge_model_benchmark (test DB: edge_model_benchmark_test)
+     - Database user: benchmark_user
+     - Host & Port:   127.0.0.1:3306
+
+  2. Backend Layer:
+     - FastAPI REST API running with Uvicorn ASGI server.
+     - Uses Python 3.11 virtual environment (.venv311).
+     - Host & Port:   127.0.0.1:8000
+
+  3. Frontend Layer:
+     - Modern React 19 single-page application built with Vite.
+     - Provides the selection-driven interactive comparison dashboard.
+     - Host & Port:   127.0.0.1:3000
+
+Project Root Directory:
+  /Users/vamsi/Desktop/edge-model-benchmark
+
+Local Access URLs:
+  - Web Dashboard:         http://127.0.0.1:3000  (or http://localhost:3000)
+  - API Health Check:      http://127.0.0.1:8000/api/health
+  - Interactive API Docs:  http://127.0.0.1:8000/docs
+  - ReDoc API Docs:        http://127.0.0.1:8000/redoc
+
+
+--------------------------------------------------------------------------------
+2. HOW TO START THE PROJECT
+--------------------------------------------------------------------------------
+Always start services in this specific sequence:
+  Step A: Start Docker Desktop & MySQL
+  Step B: Start the FastAPI Backend
+  Step C: Start the React Frontend
+
+IMPORTANT: The backend and frontend must run in SEPARATE terminal windows.
+Both terminals must remain open while you are using the application.
+
+................................................................................
+Step A: Start Docker Desktop and MySQL Container
+................................................................................
+1. Launch Docker Desktop:
+   - On macOS, open Docker from the Applications folder or Spotlight search:
+       open -a Docker
+   - Wait 15-30 seconds until the Docker whale icon in your macOS menu bar
+     stops animating and indicates that the Docker engine is running.
+
+2. Start the existing `edge-mysql` container:
+   Run in your terminal:
+       docker start edge-mysql
+
+3. Verify that MySQL is running:
+   Run:
+       docker ps --filter "name=edge-mysql"
+   You should see `edge-mysql` listed with status "Up ... (healthy)" or "Up ...".
+
+................................................................................
+Step B: Start the FastAPI Backend Server (Terminal 1)
+................................................................................
+1. Open a new terminal window and navigate to the project directory:
+       cd /Users/vamsi/Desktop/edge-model-benchmark
+
+2. Start Uvicorn using the existing Python 3.11 virtual environment (.venv311):
+       PYTHONPATH=. .venv311/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000
+
+3. Verify the backend started successfully:
+   You will see terminal output similar to:
+       INFO:     Started server process [PID]
+       INFO:     Waiting for application startup.
+       INFO:     Application startup complete.
+       INFO:     Uvicorn running on http://127.0.0.1:8000
+
+4. Quick Health Check (optional, from another terminal or browser):
+   Open http://127.0.0.1:8000/api/health in your browser, or run:
+       curl -s http://127.0.0.1:8000/api/health
+   Expected response:
+       {"status":"ok","api":"online",...,"database":{"connected":true,...}}
+
+Leave Terminal 1 OPEN. Do not close it.
+
+................................................................................
+Step C: Start the React Frontend Dashboard (Terminal 2)
+................................................................................
+1. Open a second, separate terminal window and navigate to the frontend folder:
+       cd /Users/vamsi/Desktop/edge-model-benchmark/frontend
+
+2. Start the Vite development server:
+       npm run dev -- --host 127.0.0.1 --port 3000
+
+3. Verify the frontend started successfully:
+   You will see output similar to:
+       VITE v8.3.x  ready in ... ms
+       ➜  Local:   http://127.0.0.1:3000/
+
+4. Open the Web Dashboard:
+   In your browser (Chrome, Safari, Firefox), navigate to:
+       http://127.0.0.1:3000
+
+Leave Terminal 2 OPEN. Do not close it.
+
+
+--------------------------------------------------------------------------------
+3. HOW TO STOP THE PROJECT
+--------------------------------------------------------------------------------
+When you have finished using the application, stop the services in reverse order.
+
+................................................................................
+Step 1: Stop the Frontend (Terminal 2)
+................................................................................
+In the terminal running the Vite dev server (Terminal 2):
+  Press:  Ctrl + C
+This cleanly halts the Vite node server.
+
+................................................................................
+Step 2: Stop the Backend (Terminal 1)
+................................................................................
+In the terminal running the FastAPI server (Terminal 1):
+  Press:  Ctrl + C
+You will see:
+  INFO:     Shutting down
+  INFO:     Application shutdown complete.
+
+................................................................................
+Step 3: Exit MySQL Client (if open)
+................................................................................
+If you have an interactive MySQL shell open in any terminal:
+  Type:   exit
+  (or type:  \q  and press Enter)
+
+................................................................................
+Step 4: Stop the MySQL Docker Container
+................................................................................
+In any terminal window, run:
+    docker stop edge-mysql
+
+This gracefully stops the MySQL server without deleting any benchmark data,
+tables, or schemas.
+
+................................................................................
+Step 5: Verify All Services Are Stopped
+................................................................................
+To verify that everything is safely shut down and no ports remain open:
+
+1. Check that ports 3000 and 8000 are no longer listening:
+       lsof -nP -iTCP:3000 -iTCP:8000 -sTCP:LISTEN
+   (This command should return completely blank output).
+
+2. Check that the MySQL container is no longer running:
+       docker ps --filter "name=edge-mysql"
+   (The table output should only show column headers, with no running container).
+
+
+--------------------------------------------------------------------------------
+4. USEFUL MYSQL COMMANDS
+--------------------------------------------------------------------------------
+You can inspect persisted benchmark runs and measurements directly through the
+MySQL CLI inside the container.
+
+................................................................................
+Connect to MySQL
+................................................................................
+Run this command from your terminal:
+    docker exec -it edge-mysql mysql -u benchmark_user -p edge_model_benchmark
+
+When prompted:
+    Enter password: <enter your custom benchmark_user password>
+
+SECURITY NOTE:
+  Type your password privately when prompted by MySQL. The password will not
+  appear on screen as you type. Never write your actual password into this guide,
+  command line arguments, or version control.
+
+................................................................................
+Useful Queries Once Inside MySQL
+................................................................................
+1. View all tables in the database:
+       SHOW TABLES;
+
+2. View summary of all saved benchmark runs:
+       SELECT id, run_name, device, status, provenance, created_at
+       FROM benchmark_runs
+       ORDER BY id DESC;
+
+3. View count of runs and measurements:
+       SELECT
+         (SELECT COUNT(*) FROM benchmark_runs) AS total_runs,
+         (SELECT COUNT(*) FROM model_measurements) AS total_measurements;
+
+4. View recent model measurements (latency, accuracy, RAM, size):
+       SELECT
+         id,
+         run_id,
+         model_id,
+         runtime,
+         ROUND(top1_accuracy * 100, 2) AS top1_acc_pct,
+         ROUND(mean_latency_ms, 2) AS mean_lat_ms,
+         ROUND(peak_ram_mb, 1) AS ram_mb,
+         ROUND(file_size_mb, 2) AS size_mb
+       FROM model_measurements
+       ORDER BY id DESC
+       LIMIT 10;
+
+5. Exit the MySQL CLI:
+       exit;
+
+
+--------------------------------------------------------------------------------
+5. TROUBLESHOOTING
+--------------------------------------------------------------------------------
+Common issues and how to resolve them:
+
+Issue 1: "failed to connect to the docker API / docker.sock connect: no such file"
+  Cause:  Docker Desktop application is not running on your Mac.
+  Fix:    Open Docker Desktop from Applications (`open -a Docker`), wait until
+          it is fully initialized, then run `docker start edge-mysql`.
+
+Issue 2: "Error response from daemon: Container ... is already in use"
+  Cause:  `edge-mysql` is already started.
+  Fix:    No action needed! Verify with `docker ps --filter "name=edge-mysql"`.
+
+Issue 3: Port 8000 or Port 3000 is already in use ([Errno 48] Address already in use)
+  Cause:  A previous instance of Uvicorn or Vite is still running in the background.
+  Fix:    Find and terminate the process occupying the port:
+            lsof -nP -iTCP:8000 -sTCP:LISTEN
+            lsof -nP -iTCP:3000 -sTCP:LISTEN
+          Take the PID number from the output and stop it:
+            kill <PID>
+
+Issue 4: Dashboard displays "Database Connection Warning" / API says "disconnected"
+  Cause:  The backend was started before `edge-mysql` was ready, or credentials changed.
+  Fix:    1. Ensure `edge-mysql` is running: `docker start edge-mysql`.
+          2. Restart the backend in Terminal 1 (Ctrl+C, then re-run uvicorn).
+          3. Check `http://127.0.0.1:8000/api/health` to confirm "connected: true".
+          4. Ensure your password in `.env` matches the container credentials.
+
+Issue 5: Always start MySQL BEFORE the backend:
+  FastAPI initializes its database connection pool upon startup. If MySQL is
+  stopped when the backend starts, requests querying benchmark results will fail.
+  Always run `docker start edge-mysql` first.
+
+
+--------------------------------------------------------------------------------
+6. DATA SAFETY & PRESERVATION
+--------------------------------------------------------------------------------
+CRITICAL RULES FOR SAFEGUARDING YOUR BENCHMARK DATA:
+
+  [!] DO NOT DELETE THE CONTAINER (`docker rm`):
+      - Use `docker stop edge-mysql` to stop the container.
+      - NEVER run `docker rm edge-mysql` or `docker compose down -v`.
+      - Stopping the container preserves all tables, historical benchmark runs,
+        and measurements inside its persistent Docker volume.
+      - Deleting the container will permanently erase your MySQL benchmark runs.
+
+  [!] STOPPING IS DIFFERENT FROM DELETING:
+      - `docker stop`: Pauses execution safely. Zero data is lost.
+      - `docker rm` or pruning volumes: Destroys the container and stored data.
+
+  [!] PRESERVE THE `.env` FILE:
+      - The `.env` file in the project root holds your database credentials.
+      - Never delete this file. It is excluded from Git (.gitignore) for safety.
+      - Never commit your actual password to `.env.example` or GitHub.
+
+  [!] PRESERVE RESULTS AND CONVERSIONS:
+      - The `results/` folder stores evaluated ImageNet accuracy logs and summary
+        JSON files (`results/accuracy_*.json`, `results/edge_benchmarks_summary.json`).
+      - The `results/conversions/` folder stores serialized `.onnx` and `.tflite`
+        edge model artifacts.
+      - The `dataset/` folder stores ImageNet validation samples and manifests.
+      - Do not delete or overwrite these files; they took extensive evaluation
+        runs to produce.
+
+================================================================================
+End of Running Guide
+================================================================================

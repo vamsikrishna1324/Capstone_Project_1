@@ -1,0 +1,19 @@
+{
+  "model_id": "efficientnet_b0",
+  "architecture": "EfficientNet-B0",
+  "weights": "EfficientNet_B0_Weights.DEFAULT",
+  "runtime": "pytorch",
+  "device": "cpu",
+  "batch_size": 16,
+  "manifest_path": "dataset/val_manifest.csv",
+  "total_samples": 50000,
+  "evaluated_samples": 50000,
+  "skipped_images": 0,
+  "execution_errors": 0,
+  "top1_accuracy": 0.777,
+  "top5_accuracy": 0.9352,
+  "evaluation_time_seconds": 6620.83,
+  "evaluation_time_minutes": 110.35,
+  "throughput_samples_per_sec": 7.55,
+  "timestamp": "2026-10-17 14:36:15"
+}

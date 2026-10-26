@@ -1,0 +1,19 @@
+{
+  "model_id": "mobilenet_v3_small",
+  "architecture": "MobileNetV3-Small",
+  "weights": "MobileNet_V3_Small_Weights.DEFAULT",
+  "runtime": "onnx",
+  "device": "cpu",
+  "batch_size": 1,
+  "manifest_path": "dataset/val_manifest.csv",
+  "total_samples": 50000,
+  "evaluated_samples": 100,
+  "skipped_images": 0,
+  "execution_errors": 0,
+  "top1_accuracy": 0.74,
+  "top5_accuracy": 0.91,
+  "evaluation_time_seconds": 1.55,
+  "evaluation_time_minutes": 0.0258,
+  "throughput_samples_per_sec": 64.52,
+  "timestamp": "2026-10-18 12:10:01"
+}
